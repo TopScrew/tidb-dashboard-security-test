@@ -32,7 +32,6 @@ type Config struct {
 
 	EnableTelemetry       bool
 	EnableExperimental    bool
-	EnableKeyVisualizer   bool
 	DisableCustomPromAddr bool
 	FeatureVersion        string // assign the target TiDB version when running TiDB Dashboard as standalone mode
 
@@ -50,7 +49,6 @@ func Default() *Config {
 		TiDBTLSConfig:         nil,
 		EnableTelemetry:       false,
 		EnableExperimental:    false,
-		EnableKeyVisualizer:   true,
 		DisableCustomPromAddr: false,
 		FeatureVersion:        version.PDVersion,
 		NgmTimeout:            30, // s
