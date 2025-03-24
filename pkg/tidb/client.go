@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package tidb
 
@@ -16,7 +16,7 @@ import (
 	"github.com/VividCortex/mysqlerr"
 	"github.com/go-sql-driver/mysql"
 	"github.com/pingcap/log"
-	"go.etcd.io/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	mysqlDriver "gorm.io/driver/mysql"

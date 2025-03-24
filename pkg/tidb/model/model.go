@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package model
 
@@ -63,6 +63,7 @@ type TableInfo struct {
 	Name      CIStr          `json:"name"`
 	Indices   []*IndexInfo   `json:"index_info"`
 	Partition *PartitionInfo `json:"partition"`
+	Version   *int64         `json:"version"`
 }
 
 // GetPartitionInfo returns the partition information.

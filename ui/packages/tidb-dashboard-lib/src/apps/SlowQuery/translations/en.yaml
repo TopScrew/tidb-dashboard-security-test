@@ -122,8 +122,26 @@ slow_query:
     ru_tooltip: request units
     resource_group: Resource Group
     resource_group_tooltip: The resource group that the query belongs to
-    time_queued_by_rc: Time Queued by RC
-    time_queued_by_rc_tooltip: The wait time spent in the resource queue
+    time_queued_by_rc: The total time queued by RC
+    time_queued_by_rc_tooltip: 'The total wait time spent in the resource queue (note: {{distro.tikv}} executes requests in parallel so that this is not a wall time)'
+
+    # Network fields
+    unpacked_bytes_sent_tikv_total: Bytes Sent to TiKV
+    unpacked_bytes_sent_tikv_total_tooltip: The number of bytes sent to TiKV
+    unpacked_bytes_received_tikv_total: Bytes Received from TiKV
+    unpacked_bytes_received_tikv_total_tooltip: The number of bytes received from TiKV
+    unpacked_bytes_sent_tikv_cross_zone: Cross-Zone Bytes Sent to TiKV
+    unpacked_bytes_sent_tikv_cross_zone_tooltip: The number of bytes sent to TiKV across zones
+    unpacked_bytes_received_tikv_cross_zone: Cross-Zone Bytes Received from TiKV
+    unpacked_bytes_received_tikv_cross_zone_tooltip: The number of bytes received from TiKV across zones
+    unpacked_bytes_sent_tiflash_total: Bytes Sent to TiFlash
+    unpacked_bytes_sent_tiflash_total_tooltip: The number of bytes sent to TiFlash
+    unpacked_bytes_received_tiflash_total: Bytes Received from TiFlash
+    unpacked_bytes_received_tiflash_total_tooltip: The number of bytes received from TiFlash
+    unpacked_bytes_sent_tiflash_cross_zone: Cross-Zone Bytes Sent to TiFlash
+    unpacked_bytes_sent_tiflash_cross_zone_tooltip: The number of bytes sent to TiFlash across zones
+    unpacked_bytes_received_tiflash_cross_zone: Cross-Zone Bytes Received from TiFlash
+    unpacked_bytes_received_tiflash_cross_zone_tooltip: The number of bytes received from TiFlash across zones
 
   common:
     status:
@@ -172,3 +190,9 @@ slow_query:
     exporting: Exporting
     help: Help
     help_url: https://docs.pingcap.com/tidb/dev/dashboard-slow-query
+    download_db: Download DB
+  download_modal:
+    download: Download
+    title: 'Download Slow Query db File'
+    download_by_day: Download By Day
+    download_by_hour: Download By Hour

@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 // conprof is short for continuous profiling
 package conprof
@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"go.etcd.io/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/fx"
 
 	"github.com/pingcap/tidb-dashboard/pkg/apiserver/user"

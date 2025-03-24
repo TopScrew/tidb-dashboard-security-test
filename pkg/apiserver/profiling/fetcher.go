@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package profiling
 
@@ -17,11 +17,13 @@ import (
 
 	"github.com/pingcap/tidb-dashboard/pkg/config"
 	"github.com/pingcap/tidb-dashboard/pkg/pd"
+	"github.com/pingcap/tidb-dashboard/pkg/scheduling"
 	"github.com/pingcap/tidb-dashboard/pkg/ticdc"
 	"github.com/pingcap/tidb-dashboard/pkg/tidb"
 	"github.com/pingcap/tidb-dashboard/pkg/tiflash"
 	"github.com/pingcap/tidb-dashboard/pkg/tikv"
 	"github.com/pingcap/tidb-dashboard/pkg/tiproxy"
+	"github.com/pingcap/tidb-dashboard/pkg/tso"
 )
 
 const (
@@ -39,12 +41,14 @@ type profileFetcher interface {
 }
 
 type fetchers struct {
-	tikv    profileFetcher
-	tiflash profileFetcher
-	tidb    profileFetcher
-	pd      profileFetcher
-	ticdc   profileFetcher
-	tiproxy profileFetcher
+	tikv       profileFetcher
+	tiflash    profileFetcher
+	tidb       profileFetcher
+	pd         profileFetcher
+	ticdc      profileFetcher
+	tiproxy    profileFetcher
+	tso        profileFetcher
+	scheduling profileFetcher
 }
 
 var newFetchers = fx.Provide(func(
@@ -54,6 +58,8 @@ var newFetchers = fx.Provide(func(
 	tiflashClient *tiflash.Client,
 	ticdcClient *ticdc.Client,
 	tiproxyClient *tiproxy.Client,
+	tsoClient *tso.Client,
+	schedulingClient *scheduling.Client,
 	config *config.Config,
 ) *fetchers {
 	return &fetchers{
@@ -75,6 +81,12 @@ var newFetchers = fx.Provide(func(
 		},
 		tiproxy: &tiproxyFecther{
 			client: tiproxyClient,
+		},
+		tso: &tsoFetcher{
+			client: tsoClient,
+		},
+		scheduling: &schedulingFetcher{
+			client: schedulingClient,
 		},
 	}
 })
@@ -134,6 +146,37 @@ type tiflashFetcher struct {
 }
 
 func (f *tiflashFetcher) fetch(op *fetchOptions) ([]byte, error) {
+	if strings.HasSuffix(op.path, "heap") {
+		scheme := f.client.GetHTTPScheme()
+		cmd := exec.Command("perl", "/dev/stdin", "--raw", scheme+"://"+op.ip+":"+strconv.Itoa(op.port)+op.path) //nolint:gosec
+		cmd.Stdin = strings.NewReader(jeprof)
+		stdout, err := cmd.StdoutPipe()
+		if err != nil {
+			return nil, err
+		}
+		stderr, err := cmd.StderrPipe()
+		if err != nil {
+			return nil, err
+		}
+		// use jeprof to fetch tiflash heap profile
+		err = cmd.Start()
+		if err != nil {
+			return nil, err
+		}
+		data, err := io.ReadAll(stdout)
+		if err != nil {
+			return nil, err
+		}
+		errMsg, err := io.ReadAll(stderr)
+		if err != nil {
+			return nil, err
+		}
+		err = cmd.Wait()
+		if err != nil {
+			return nil, fmt.Errorf("failed to fetch tiflash heap profile: %s", errMsg)
+		}
+		return data, nil
+	}
 	return f.client.WithTimeout(maxProfilingTimeout).AddRequestHeader("Content-Type", "application/protobuf").SendGetRequest(op.ip, op.port, op.path)
 }
 
@@ -172,5 +215,21 @@ type tiproxyFecther struct {
 }
 
 func (f *tiproxyFecther) fetch(op *fetchOptions) ([]byte, error) {
+	return f.client.WithTimeout(maxProfilingTimeout).SendGetRequest(op.ip, op.port, op.path)
+}
+
+type tsoFetcher struct {
+	client *tso.Client
+}
+
+func (f *tsoFetcher) fetch(op *fetchOptions) ([]byte, error) {
+	return f.client.WithTimeout(maxProfilingTimeout).SendGetRequest(op.ip, op.port, op.path)
+}
+
+type schedulingFetcher struct {
+	client *scheduling.Client
+}
+
+func (f *schedulingFetcher) fetch(op *fetchOptions) ([]byte, error) {
 	return f.client.WithTimeout(maxProfilingTimeout).SendGetRequest(op.ip, op.port, op.path)
 }

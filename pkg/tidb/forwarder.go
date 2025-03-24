@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package tidb
 
@@ -11,7 +11,7 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/pingcap/log"
-	"go.etcd.io/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/fx"
 
 	"github.com/pingcap/tidb-dashboard/pkg/utils/topology"

@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package profiling
 
@@ -46,7 +46,7 @@ func (f *fetcher) FetchAndWriteToFile(duration uint, fileNameWithoutExt string, 
 		fileExtenstion = "*.proto"
 	case ProfilingTypeHeap:
 		url = "/debug/pprof/heap"
-		if f.target.Kind == model.NodeKindTiKV {
+		if f.target.Kind == model.NodeKindTiKV || f.target.Kind == model.NodeKindTiFlash {
 			profilingRawDataType = RawDataTypeJeprof
 			fileExtenstion = "*.prof"
 		} else {

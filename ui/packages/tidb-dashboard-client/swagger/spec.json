@@ -3163,6 +3163,34 @@
                 }
             }
         },
+        "/topology/scheduling": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "Get all Scheduling instances",
+                "operationId": "getSchedulingTopology",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/topology.SchedulingInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/topology/store": {
             "get": {
                 "security": [
@@ -3327,6 +3355,34 @@
                 }
             }
         },
+        "/topology/tso": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "Get all TSO instances",
+                "operationId": "getTSOTopology",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/topology.TSOInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/topsql/config": {
             "get": {
                 "security": [
@@ -3450,6 +3506,11 @@
                     {
                         "type": "string",
                         "name": "end",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "group_by",
                         "in": "query"
                     },
                     {
@@ -4780,6 +4841,9 @@
                 "num_pd_nodes": {
                     "type": "integer"
                 },
+                "num_scheduling_nodes": {
+                    "type": "integer"
+                },
                 "num_ticdc_nodes": {
                     "type": "integer"
                 },
@@ -4793,6 +4857,9 @@
                     "type": "integer"
                 },
                 "num_tiproxy_nodes": {
+                    "type": "integer"
+                },
+                "num_tso_nodes": {
                     "type": "integer"
                 }
             }
@@ -5231,6 +5298,31 @@
                     "description": "TODO: Switch back to uint64 when modern browser as well as Swagger handles BigInt well.",
                     "type": "string"
                 },
+                "unpacked_bytes_received_tiflash_cross_zone": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_received_tiflash_total": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_received_tikv_cross_zone": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_received_tikv_total": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_sent_tiflash_cross_zone": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_sent_tiflash_total": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_sent_tikv_cross_zone": {
+                    "type": "integer"
+                },
+                "unpacked_bytes_sent_tikv_total": {
+                    "description": "Network Fields",
+                    "type": "integer"
+                },
                 "user": {
                     "description": "Connection",
                     "type": "string"
@@ -5656,6 +5748,31 @@
                 "sum_ru": {
                     "type": "number"
                 },
+                "sum_unpacked_bytes_received_tiflash_cross_zone": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_received_tiflash_total": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_received_tikv_cross_zone": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_received_tikv_total": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_sent_tiflash_cross_zone": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_sent_tiflash_total": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_sent_tikv_cross_zone": {
+                    "type": "integer"
+                },
+                "sum_unpacked_bytes_sent_tikv_total": {
+                    "description": "Network Fields",
+                    "type": "integer"
+                },
                 "sum_warnings": {
                     "type": "integer"
                 },
@@ -5709,6 +5826,32 @@
                 },
                 "start_timestamp": {
                     "description": "Ts = 0 means unknown",
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.SchedulingInfo": {
+            "type": "object",
+            "properties": {
+                "deploy_path": {
+                    "type": "string"
+                },
+                "git_hash": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "start_timestamp": {
                     "type": "integer"
                 },
                 "status": {
@@ -5782,6 +5925,32 @@
                     "items": {
                         "$ref": "#/definitions/topology.StoreLabels"
                     }
+                }
+            }
+        },
+        "topology.TSOInfo": {
+            "type": "object",
+            "properties": {
+                "deploy_path": {
+                    "type": "string"
+                },
+                "git_hash": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "start_timestamp": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "string"
                 }
             }
         },
@@ -5905,6 +6074,29 @@
                 }
             }
         },
+        "topsql.SummaryByItem": {
+            "type": "object",
+            "properties": {
+                "cpu_time_ms": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "cpu_time_ms_sum": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "timestamp_sec": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "topsql.SummaryItem": {
             "type": "object",
             "properties": {
@@ -5982,6 +6174,12 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/topsql.SummaryItem"
+                    }
+                },
+                "data_by": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/topsql.SummaryByItem"
                     }
                 }
             }

@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package slowquery
 
@@ -94,7 +94,7 @@ func (s *Service) getDetails(c *gin.Context) {
 	}
 
 	db := utils.GetTiDBConnection(c)
-	result, err := QuerySlowLogDetail(&req, db.Table(SlowQueryTable))
+	result, err := QuerySlowLogDetail(&req, s.params.SysSchema, db.Table(SlowQueryTable))
 	if err != nil {
 		rest.Error(c, err)
 		return

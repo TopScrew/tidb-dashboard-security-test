@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package tikv
 
@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"go.etcd.io/etcd/pkg/transport"
+	"go.etcd.io/etcd/client/pkg/v3/transport"
 	"go.uber.org/fx"
 
 	"github.com/pingcap/tidb-dashboard/pkg/config"

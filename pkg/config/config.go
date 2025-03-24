@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package config
 
@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"go.etcd.io/etcd/pkg/transport"
+	"go.etcd.io/etcd/client/pkg/v3/transport"
 
 	"github.com/pingcap/tidb-dashboard/pkg/utils/version"
 )
@@ -32,6 +32,7 @@ type Config struct {
 
 	EnableTelemetry       bool
 	EnableExperimental    bool
+	EnableKeyVisualizer   bool
 	DisableCustomPromAddr bool
 	FeatureVersion        string // assign the target TiDB version when running TiDB Dashboard as standalone mode
 
@@ -49,6 +50,7 @@ func Default() *Config {
 		TiDBTLSConfig:         nil,
 		EnableTelemetry:       false,
 		EnableExperimental:    false,
+		EnableKeyVisualizer:   true,
 		DisableCustomPromAddr: false,
 		FeatureVersion:        version.PDVersion,
 		NgmTimeout:            30, // s

@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package topology
 
@@ -53,6 +53,26 @@ type TiProxyInfo struct {
 	DeployPath     string          `json:"deploy_path"`
 	Status         ComponentStatus `json:"status"`
 	StatusPort     uint            `json:"status_port"`
+	StartTimestamp int64           `json:"start_timestamp"`
+}
+
+type TSOInfo struct {
+	GitHash        string          `json:"git_hash"`
+	Version        string          `json:"version"`
+	IP             string          `json:"ip"`
+	Port           uint            `json:"port"`
+	DeployPath     string          `json:"deploy_path"`
+	Status         ComponentStatus `json:"status"`
+	StartTimestamp int64           `json:"start_timestamp"`
+}
+
+type SchedulingInfo struct {
+	GitHash        string          `json:"git_hash"`
+	Version        string          `json:"version"`
+	IP             string          `json:"ip"`
+	Port           uint            `json:"port"`
+	DeployPath     string          `json:"deploy_path"`
+	Status         ComponentStatus `json:"status"`
 	StartTimestamp int64           `json:"start_timestamp"`
 }
 

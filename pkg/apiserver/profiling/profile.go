@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package profiling
 
@@ -17,8 +17,8 @@ func profileAndWritePprof(_ context.Context, fts *fetchers, target *model.Reques
 		}
 		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.tikv, profilingType: profilingType})
 	case model.NodeKindTiFlash:
-		// TiFlash only supports CPU Profiling
-		if profilingType != ProfilingTypeCPU {
+		// TiFlash only supports CPU/heap Profiling
+		if profilingType != ProfilingTypeCPU && profilingType != ProfilingTypeHeap {
 			return "", "", ErrUnsupportedProfilingType.NewWithNoMessage()
 		}
 		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.tiflash, profilingType: profilingType})
@@ -30,6 +30,10 @@ func profileAndWritePprof(_ context.Context, fts *fetchers, target *model.Reques
 		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.ticdc, profilingType: profilingType})
 	case model.NodeKindTiProxy:
 		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.tiproxy, profilingType: profilingType})
+	case model.NodeKindTSO:
+		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.tso, profilingType: profilingType})
+	case model.NodeKindScheduling:
+		return fetchPprof(&pprofOptions{duration: profileDurationSecs, fileNameWithoutExt: fileNameWithoutExt, target: target, fetcher: &fts.scheduling, profilingType: profilingType})
 	default:
 		return "", "", ErrUnsupportedProfilingTarget.New(target.String())
 	}

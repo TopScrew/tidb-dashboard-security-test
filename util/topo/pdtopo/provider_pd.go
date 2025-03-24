@@ -1,11 +1,11 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package pdtopo
 
 import (
 	"context"
 
-	"go.etcd.io/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"github.com/pingcap/tidb-dashboard/util/client/pdclient"
 	"github.com/pingcap/tidb-dashboard/util/topo"

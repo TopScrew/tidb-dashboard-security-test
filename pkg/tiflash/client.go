@@ -1,4 +1,4 @@
-// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
 
 package tiflash
 
@@ -47,6 +47,10 @@ func NewTiFlashClient(lc fx.Lifecycle, httpClient *httpc.Client, config *config.
 	})
 
 	return client
+}
+
+func (c Client) GetHTTPScheme() string {
+	return c.httpScheme
 }
 
 func (c Client) WithTimeout(timeout time.Duration) *Client {
