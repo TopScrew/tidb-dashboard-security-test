@@ -1,4 +1,4 @@
-// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package statement
 
@@ -237,15 +237,13 @@ func (s *Service) planDetailHandler(c *gin.Context) {
 
 	if result.AggBinaryPlan != "" {
 		// may failed but it's ok
-		result.BinaryPlanText, err = utils.GenerateBinaryPlanText(db, result.AggBinaryPlan)
+		result.BinaryPlanText, _ = utils.GenerateBinaryPlanText(db, result.AggBinaryPlan)
 		// may failed but it's ok
 		result.BinaryPlanJSON, _ = utils.GenerateBinaryPlanJSON(result.AggBinaryPlan)
 
-		if err == nil {
-			// reduce response size
-			result.AggBinaryPlan = ""
-			result.AggPlan = ""
-		}
+		// reduce response size
+		result.AggBinaryPlan = ""
+		result.AggPlan = ""
 	}
 
 	c.JSON(http.StatusOK, result)

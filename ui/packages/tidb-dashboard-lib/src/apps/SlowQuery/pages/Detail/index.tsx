@@ -173,7 +173,7 @@ function DetailPage() {
                     )
                 })()}
               </Descriptions>
-              {(!!data.binary_plan_text || !!data.plan) && (
+              {(binaryPlanObj || !!data.plan) && (
                 <>
                   <Space size="middle" style={{ color: '#8c8c8c' }}>
                     {t('slow_query.detail.plan.title')}

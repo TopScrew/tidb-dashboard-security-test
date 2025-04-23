@@ -1,4 +1,4 @@
-// Copyright 2025 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package slowquery
 
@@ -109,15 +109,13 @@ func (s *Service) getDetails(c *gin.Context) {
 	// See: https://github.com/pingcap/tidb-dashboard/issues/1515
 	if result.BinaryPlan != "" {
 		// may failed but it's ok
-		result.BinaryPlanText, err = utils.GenerateBinaryPlanText(db, result.BinaryPlan)
+		result.BinaryPlanText, _ = utils.GenerateBinaryPlanText(db, result.BinaryPlan)
 		// may failed but it's ok
 		result.BinaryPlanJSON, _ = utils.GenerateBinaryPlanJSON(result.BinaryPlan)
 
-		if err == nil {
-			// reduce response size
-			result.BinaryPlan = ""
-			result.Plan = ""
-		}
+		// reduce response size
+		result.BinaryPlan = ""
+		result.Plan = ""
 	}
 
 	c.JSON(http.StatusOK, *result)
