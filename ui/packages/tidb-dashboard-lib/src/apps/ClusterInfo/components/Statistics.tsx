@@ -92,13 +92,11 @@ export default function Statistics() {
             />
           </Card>
           {InstanceKinds.map((ik) => {
-            const d = data.stats_by_instance_kind?.[ik]
-            const instNum = d?.number_of_instances ?? 0
-            return instNum > 0 ? (
+            return (
               <Card title={instanceKindName(ik)} key={ik}>
-                <PartialInfo data={d} />
+                <PartialInfo data={data.stats_by_instance_kind?.[ik]} />
               </Card>
-            ) : null
+            )
           })}
         </div>
       )}

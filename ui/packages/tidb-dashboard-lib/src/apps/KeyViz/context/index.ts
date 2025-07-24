@@ -29,14 +29,11 @@ export interface IKeyVizDataSource {
   ): AxiosPromise<MatrixMatrix>
 }
 
-export interface IKeyVizConfig {
-  showHelp?: boolean
-  showSetting?: boolean
-}
-
 export interface IKeyVizContext {
   ds: IKeyVizDataSource
-  cfg?: IKeyVizConfig
+  cfg?: {
+    showHelp?: boolean
+  }
 }
 
 export const KeyVizContext = createContext<IKeyVizContext | null>(null)

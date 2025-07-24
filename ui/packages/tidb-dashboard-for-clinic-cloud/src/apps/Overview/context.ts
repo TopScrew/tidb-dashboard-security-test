@@ -29,14 +29,6 @@ class DataSource implements IOverviewDataSource {
     return client.getInstance().getTiProxyTopology(options)
   }
 
-  getTSOTopology(options?: ReqConfig) {
-    return client.getInstance().getTSOTopology(options)
-  }
-
-  getSchedulingTopology(options?: ReqConfig) {
-    return client.getInstance().getSchedulingTopology(options)
-  }
-
   metricsQueryGet(params: {
     endTimeSec?: number
     query?: string

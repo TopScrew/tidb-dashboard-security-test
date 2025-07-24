@@ -3163,34 +3163,6 @@
                 }
             }
         },
-        "/topology/scheduling": {
-            "get": {
-                "security": [
-                    {
-                        "JwtAuth": []
-                    }
-                ],
-                "summary": "Get all Scheduling instances",
-                "operationId": "getSchedulingTopology",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/topology.SchedulingInfo"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/topology/store": {
             "get": {
                 "security": [
@@ -3355,34 +3327,6 @@
                 }
             }
         },
-        "/topology/tso": {
-            "get": {
-                "security": [
-                    {
-                        "JwtAuth": []
-                    }
-                ],
-                "summary": "Get all TSO instances",
-                "operationId": "getTSOTopology",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/topology.TSOInfo"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/topsql/config": {
             "get": {
                 "security": [
@@ -3506,11 +3450,6 @@
                     {
                         "type": "string",
                         "name": "end",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "group_by",
                         "in": "query"
                     },
                     {
@@ -4841,9 +4780,6 @@
                 "num_pd_nodes": {
                     "type": "integer"
                 },
-                "num_scheduling_nodes": {
-                    "type": "integer"
-                },
                 "num_ticdc_nodes": {
                     "type": "integer"
                 },
@@ -4857,9 +4793,6 @@
                     "type": "integer"
                 },
                 "num_tiproxy_nodes": {
-                    "type": "integer"
-                },
-                "num_tso_nodes": {
                     "type": "integer"
                 }
             }
@@ -5786,32 +5719,6 @@
                 }
             }
         },
-        "topology.SchedulingInfo": {
-            "type": "object",
-            "properties": {
-                "deploy_path": {
-                    "type": "string"
-                },
-                "git_hash": {
-                    "type": "string"
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "integer"
-                },
-                "start_timestamp": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "version": {
-                    "type": "string"
-                }
-            }
-        },
         "topology.StoreInfo": {
             "type": "object",
             "properties": {
@@ -5875,32 +5782,6 @@
                     "items": {
                         "$ref": "#/definitions/topology.StoreLabels"
                     }
-                }
-            }
-        },
-        "topology.TSOInfo": {
-            "type": "object",
-            "properties": {
-                "deploy_path": {
-                    "type": "string"
-                },
-                "git_hash": {
-                    "type": "string"
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "integer"
-                },
-                "start_timestamp": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "version": {
-                    "type": "string"
                 }
             }
         },
@@ -6024,29 +5905,6 @@
                 }
             }
         },
-        "topsql.SummaryByItem": {
-            "type": "object",
-            "properties": {
-                "cpu_time_ms": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "cpu_time_ms_sum": {
-                    "type": "integer"
-                },
-                "text": {
-                    "type": "string"
-                },
-                "timestamp_sec": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
         "topsql.SummaryItem": {
             "type": "object",
             "properties": {
@@ -6124,12 +5982,6 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/topsql.SummaryItem"
-                    }
-                },
-                "data_by": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/topsql.SummaryByItem"
                     }
                 }
             }

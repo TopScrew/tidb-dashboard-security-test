@@ -31,12 +31,6 @@ export interface ModelRequestTargetStatistics {
      * @type {number}
      * @memberof ModelRequestTargetStatistics
      */
-    'num_scheduling_nodes'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelRequestTargetStatistics
-     */
     'num_ticdc_nodes'?: number;
     /**
      * 
@@ -62,11 +56,5 @@ export interface ModelRequestTargetStatistics {
      * @memberof ModelRequestTargetStatistics
      */
     'num_tiproxy_nodes'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelRequestTargetStatistics
-     */
-    'num_tso_nodes'?: number;
 }
 

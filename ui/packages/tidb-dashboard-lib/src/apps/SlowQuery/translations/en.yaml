@@ -122,8 +122,8 @@ slow_query:
     ru_tooltip: request units
     resource_group: Resource Group
     resource_group_tooltip: The resource group that the query belongs to
-    time_queued_by_rc: The total time queued by RC
-    time_queued_by_rc_tooltip: 'The total wait time spent in the resource queue (note: {{distro.tikv}} executes requests in parallel so that this is not a wall time)'
+    time_queued_by_rc: Time Queued by RC
+    time_queued_by_rc_tooltip: The wait time spent in the resource queue
 
   common:
     status:
@@ -172,9 +172,3 @@ slow_query:
     exporting: Exporting
     help: Help
     help_url: https://docs.pingcap.com/tidb/dev/dashboard-slow-query
-    download_db: Download DB
-  download_modal:
-    download: Download
-    title: 'Download Slow Query db File'
-    download_by_day: Download By Day
-    download_by_hour: Download By Hour

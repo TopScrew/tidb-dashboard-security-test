@@ -46,10 +46,6 @@ class DataSource implements IDebugAPIDataSource {
   getPDTopology(options?: ReqConfig) {
     return client.getInstance().getPDTopology(options)
   }
-
-  getTiProxyTopology(options?: ReqConfig) {
-    return client.getInstance().getTiProxyTopology(options)
-  }
 }
 
 const ds = new DataSource()

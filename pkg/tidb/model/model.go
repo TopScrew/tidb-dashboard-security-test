@@ -63,7 +63,6 @@ type TableInfo struct {
 	Name      CIStr          `json:"name"`
 	Indices   []*IndexInfo   `json:"index_info"`
 	Partition *PartitionInfo `json:"partition"`
-	Version   *int64         `json:"version"`
 }
 
 // GetPartitionInfo returns the partition information.

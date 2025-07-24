@@ -9,20 +9,18 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/clientv3"
 	"go.uber.org/fx"
 
 	"github.com/pingcap/tidb-dashboard/pkg/apiserver/debugapi/endpoint"
 	"github.com/pingcap/tidb-dashboard/pkg/apiserver/user"
 	"github.com/pingcap/tidb-dashboard/pkg/pd"
 	"github.com/pingcap/tidb-dashboard/util/client/pdclient"
-	"github.com/pingcap/tidb-dashboard/util/client/schedulingclient"
 	"github.com/pingcap/tidb-dashboard/util/client/ticdcclient"
 	"github.com/pingcap/tidb-dashboard/util/client/tidbclient"
 	"github.com/pingcap/tidb-dashboard/util/client/tiflashclient"
 	"github.com/pingcap/tidb-dashboard/util/client/tikvclient"
 	"github.com/pingcap/tidb-dashboard/util/client/tiproxyclient"
-	"github.com/pingcap/tidb-dashboard/util/client/tsoclient"
 	"github.com/pingcap/tidb-dashboard/util/rest"
 	"github.com/pingcap/tidb-dashboard/util/rest/fileswap"
 )
@@ -39,16 +37,14 @@ func registerRouter(r *gin.RouterGroup, auth *user.AuthService, s *Service) {
 
 type ServiceParams struct {
 	fx.In
-	PDAPIClient            *pdclient.APIClient
-	TiDBStatusClient       *tidbclient.StatusClient
-	TiKVStatusClient       *tikvclient.StatusClient
-	TiFlashStatusClient    *tiflashclient.StatusClient
-	TiCDCStatusClient      *ticdcclient.StatusClient
-	TiProxyStatusClient    *tiproxyclient.StatusClient
-	EtcdClient             *clientv3.Client
-	PDClient               *pd.Client
-	TSOStatusClient        *tsoclient.StatusClient
-	SchedulingStatusClient *schedulingclient.StatusClient
+	PDAPIClient         *pdclient.APIClient
+	TiDBStatusClient    *tidbclient.StatusClient
+	TiKVStatusClient    *tikvclient.StatusClient
+	TiFlashStatusClient *tiflashclient.StatusClient
+	TiCDCStatusClient   *ticdcclient.StatusClient
+	TiProxyStatusClient *tiproxyclient.StatusClient
+	EtcdClient          *clientv3.Client
+	PDClient            *pd.Client
 }
 
 type Service struct {
@@ -61,14 +57,12 @@ type Service struct {
 
 func newService(p ServiceParams) *Service {
 	httpClients := endpoint.HTTPClients{
-		PDAPIClient:            p.PDAPIClient,
-		TiDBStatusClient:       p.TiDBStatusClient,
-		TiKVStatusClient:       p.TiKVStatusClient,
-		TiFlashStatusClient:    p.TiFlashStatusClient,
-		TiCDCStatusClient:      p.TiCDCStatusClient,
-		TiProxyStatusClient:    p.TiProxyStatusClient,
-		TSOStatusClient:        p.TSOStatusClient,
-		SchedulingStatusClient: p.SchedulingStatusClient,
+		PDAPIClient:         p.PDAPIClient,
+		TiDBStatusClient:    p.TiDBStatusClient,
+		TiKVStatusClient:    p.TiKVStatusClient,
+		TiFlashStatusClient: p.TiFlashStatusClient,
+		TiCDCStatusClient:   p.TiCDCStatusClient,
+		TiProxyStatusClient: p.TiProxyStatusClient,
 	}
 	return &Service{
 		httpClients: httpClients,
@@ -88,10 +82,6 @@ func getExtFromContentTypeHeader(contentType string) string {
 	// Some explicit overrides
 	if mediaType == "text/plain" {
 		return ".txt"
-	}
-
-	if mediaType == "application/toml" {
-		return ".toml"
 	}
 
 	exts, err := mime.ExtensionsByType(mediaType)

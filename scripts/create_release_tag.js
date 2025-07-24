@@ -81,15 +81,14 @@ function createReleaseTag() {
 
 function createMasterTag() {
   const latestTag = getGitLatestTag();
-  // the latest tag must like vX.Y.0-alpha-3-g383cf602, likes `v8.4.0-alpha-3-g383cf602`
-  // or like vX.Y.0-<sha>-3-g383cf602
-  const shortSha = getGitShortSha();
-  if (!latestTag.match(/^v\d+\.\d+.0-alpha/) && !latestTag.match(/^v\d+\.\d+.0-[0-9a-z]{8}/)) {
-    console.error(`Err: latest tag ${latestTag} is not a valid tag, please add the tag manually, currently sha is ${shortSha}, the tag should be vX.Y.Z-${shortSha}`)
+  // the latest tag must like vX.Y.0-alpha, likes `v8.4.0-alpha`
+  if (!latestTag.match(/^v\d+\.\d+.0-alpha/)) {
+    console.error(`Err: latest tag ${latestTag} is not a valid alpha tag`)
     process.exit(1)
   }
   const splitPos = latestTag.indexOf('-');
   const prefix = latestTag.substring(0, splitPos);
+  const shortSha = getGitShortSha();
   const nextTag = `${prefix}-${shortSha}`
 
   question(nextTag)

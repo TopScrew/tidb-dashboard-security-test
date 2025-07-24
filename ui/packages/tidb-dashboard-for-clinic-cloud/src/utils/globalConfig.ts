@@ -1,11 +1,9 @@
 import {
   IConProfilingConfig,
-  IKeyVizConfig,
   IOverviewConfig,
   ISlowQueryConfig,
   IStatementConfig,
-  ITopSQLConfig,
-  ITopSlowQueryConfig
+  ITopSQLConfig
 } from '@pingcap/tidb-dashboard-lib'
 
 export type AppOptions = {
@@ -41,17 +39,14 @@ export type ClusterInfo = {
   projectId?: string
   clusterId?: string
   deployType?: string // dedicated / shared
-  env?: string
 }
 
 export type AppsConfig = {
   overview?: Partial<IOverviewConfig>
   slowQuery?: Partial<ISlowQueryConfig>
-  topSlowQuery?: Partial<ITopSlowQueryConfig>
   statement?: Partial<IStatementConfig>
   topSQL?: Partial<ITopSQLConfig>
   conProf?: Partial<IConProfilingConfig>
-  keyViz?: Partial<IKeyVizConfig>
 }
 
 export type GlobalConfig = {

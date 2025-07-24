@@ -29,9 +29,7 @@ function expandHostItems(rows: HostinfoInfo[]): IExpandedHostItem[] {
       tikv: 0,
       tiflash: 0,
       ticdc: 0,
-      tiproxy: 0,
-      tso: 0,
-      scheduling: 0
+      tiproxy: 0
     }
 
     Object.values(row.instances ?? {}).forEach((i) => {

@@ -3,8 +3,9 @@ import { Space, Modal, Tabs, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
 
+import { useClientRequest } from '@lib/utils/useClientRequest'
+import { buildQueryFn, parseQueryFn } from '@lib/utils/query'
 import formatSql from '@lib/utils/sqlFormatter'
 import {
   AnimatedSkeleton,
@@ -23,40 +24,36 @@ import {
   VisualPlanView
 } from '@lib/components/VisualPlan'
 import { useVersionedLocalStorageState } from '@lib/utils/useVersionedLocalStorageState'
+import { telemetry } from '../../utils/telemetry'
 
 import DetailTabs from './DetailTabs'
 import { SlowQueryContext } from '../../context'
-import { useSlowQueryDetailUrlState } from '../../utils/detail-url-state'
-import { telemetry } from '../../utils/telemetry'
+
+export interface IPageQuery {
+  connectId?: string
+  digest?: string
+  timestamp?: number
+}
 
 const SLOW_QUERY_DETAIL_EXPAND = 'slow_query.detail_expand'
 
-function useSlowQueryDetailData() {
-  const ctx = useContext(SlowQueryContext)
-  const { digest, connectionId, timestamp } = useSlowQueryDetailUrlState()
-
-  const query = useQuery({
-    queryKey: ['slow_query', 'detail', digest, connectionId, timestamp],
-    queryFn: () => {
-      return ctx?.ds
-        .slowQueryDetailGet(connectionId, digest, timestamp, {
-          handleError: 'custom'
-        })
-        .then((res) => res.data)
-    }
-  })
-
-  return query
-}
-
 function DetailPage() {
+  const ctx = useContext(SlowQueryContext)
   const location = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
 
+  const query = DetailPage.parseQuery(location.search)
   const historyBack = (location.state ?? ({} as any)).historyBack ?? false
 
-  const { data, isLoading, error } = useSlowQueryDetailData()
+  const { data, isLoading, error } = useClientRequest((reqConfig) =>
+    ctx!.ds.slowQueryDetailGet(
+      query.connectId!,
+      query.digest!,
+      query.timestamp!,
+      reqConfig
+    )
+  )
 
   const binaryPlanObj = useMemo(() => {
     const json = data?.binary_plan_json ?? data?.binary_plan
@@ -173,7 +170,7 @@ function DetailPage() {
                     )
                 })()}
               </Descriptions>
-              {(binaryPlanObj || !!data.plan) && (
+              {(!!data.binary_plan_text || !!data.plan) && (
                 <>
                   <Space size="middle" style={{ color: '#8c8c8c' }}>
                     {t('slow_query.detail.plan.title')}
@@ -251,5 +248,8 @@ function DetailPage() {
     </div>
   )
 }
+
+DetailPage.buildQuery = buildQueryFn<IPageQuery>()
+DetailPage.parseQuery = parseQueryFn<IPageQuery>()
 
 export default DetailPage

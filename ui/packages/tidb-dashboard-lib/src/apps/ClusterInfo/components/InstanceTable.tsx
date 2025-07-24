@@ -91,29 +91,11 @@ export default function ListPage() {
     error: errTiProxy
   } = useClientRequest(ctx!.ds.getTiProxyTopology)
 
-  const {
-    data: dataTSO,
-    isLoading: loadingTSO,
-    error: errTSO
-  } = useClientRequest(ctx!.ds.getTSOTopology)
-
-  const {
-    data: dataScheduling,
-    isLoading: loadingScheduling,
-    error: errScheduling
-  } = useClientRequest(ctx!.ds.getSchedulingTopology)
-
   // query TiCDC and TiProxy components returns 404 under TiDB 7.6.0
   // filter out the 404 error
-  const errors = [
-    errTiDB,
-    errStores,
-    errPD,
-    errTiCDC,
-    errTiProxy,
-    errTSO,
-    errScheduling
-  ].filter((e) => e?.response?.status !== 404)
+  const errors = [errTiDB, errStores, errPD, errTiCDC, errTiProxy].filter(
+    (e) => e?.response?.status !== 404
+  )
 
   const [tableData, groupData] = useMemo(
     () =>
@@ -124,19 +106,9 @@ export default function ListPage() {
         dataTiFlash: dataStores?.tiflash,
         dataTiCDC,
         dataTiProxy,
-        dataTSO,
-        dataScheduling,
         includeTiFlash: true
       }),
-    [
-      dataTiDB,
-      dataStores,
-      dataPD,
-      dataTiCDC,
-      dataTiProxy,
-      dataTSO,
-      dataScheduling
-    ]
+    [dataTiDB, dataStores, dataPD, dataTiCDC, dataTiProxy]
   )
 
   const handleHideTiDB = useCallback(
@@ -232,9 +204,7 @@ export default function ListPage() {
         loadingStores ||
         loadingPD ||
         loadingTiCDC ||
-        loadingTiProxy ||
-        loadingTSO ||
-        loadingScheduling
+        loadingTiProxy
       }
       columns={columns}
       items={tableData}

@@ -7,9 +7,7 @@ const targetNameMap = {
   num_pd_nodes: () => instanceKindName('pd'),
   num_tiflash_nodes: () => instanceKindName('tiflash'),
   num_ticdc_nodes: () => instanceKindName('ticdc'),
-  num_tiproxy_nodes: () => instanceKindName('tiproxy'),
-  num_tso_nodes: () => instanceKindName('tso'),
-  num_scheduling_nodes: () => instanceKindName('scheduling')
+  num_tiproxy_nodes: () => instanceKindName('tiproxy')
 }
 
 export const combineTargetStats = (stats: ModelRequestTargetStatistics) =>

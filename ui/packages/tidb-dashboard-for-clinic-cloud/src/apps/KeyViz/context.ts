@@ -1,8 +1,7 @@
 import {
   IKeyVizDataSource,
   IKeyVizContext,
-  ReqConfig,
-  IKeyVizConfig
+  ReqConfig
 } from '@pingcap/tidb-dashboard-lib'
 import client, { ConfigKeyVisualConfig } from '~/client'
 
@@ -41,13 +40,6 @@ class DataSource implements IKeyVizDataSource {
 
 const ds = new DataSource()
 
-export function ctx(cfg: Partial<IKeyVizConfig>): IKeyVizContext {
-  return {
-    ds,
-    cfg: {
-      showHelp: true,
-      showSetting: true,
-      ...cfg
-    }
-  }
+export const ctx: IKeyVizContext = {
+  ds
 }

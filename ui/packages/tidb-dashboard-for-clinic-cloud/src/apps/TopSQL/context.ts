@@ -22,7 +22,6 @@ class DataSource implements ITopSQLDataSource {
 
   topsqlSummaryGet(
     end?: string,
-    groupBy?: string,
     instance?: string,
     instanceType?: string,
     start?: string,
@@ -33,7 +32,6 @@ class DataSource implements ITopSQLDataSource {
     return client.getInstance().topsqlSummaryGet(
       {
         end,
-        groupBy,
         instance,
         instanceType,
         start,

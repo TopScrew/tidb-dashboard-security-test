@@ -1,28 +1,18 @@
 import React, { useContext } from 'react'
 import { Root } from '@lib/components'
 import { HashRouter as Router, Route, Routes } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import useCache, { CacheContext } from '@lib/utils/useCache'
 
-import { useLocationChange } from '@lib/hooks/useLocationChange'
 import { addTranslations } from '@lib/utils/i18n'
 
 import { List, Detail } from './pages'
+
 import { SlowQueryContext } from './context'
+
 import translations from './translations'
+import { useLocationChange } from '@lib/hooks/useLocationChange'
 
 addTranslations(translations)
-
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1
-      // refetchOnMount: false,
-      // refetchOnReconnect: false,
-    }
-  }
-})
 
 function AppRoutes() {
   useLocationChange()
@@ -36,19 +26,21 @@ function AppRoutes() {
 }
 
 export default function () {
+  const slowQueryCacheMgr = useCache(2)
+
   const context = useContext(SlowQueryContext)
   if (context === null) {
     throw new Error('SlowQueryContext must not be null')
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Root>
+    <Root>
+      <CacheContext.Provider value={slowQueryCacheMgr}>
         <Router>
           <AppRoutes />
         </Router>
-      </Root>
-    </QueryClientProvider>
+      </CacheContext.Provider>
+    </Root>
   )
 }
 

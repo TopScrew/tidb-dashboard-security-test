@@ -1,5 +1,5 @@
-import React, { useContext, useMemo } from 'react'
-import { Tooltip, Typography } from 'antd'
+import React, { useMemo } from 'react'
+import { Tooltip } from 'antd'
 import { getValueFormat } from '@baurine/grafana-value-formats'
 import { useTranslation } from 'react-i18next'
 import {
@@ -7,87 +7,49 @@ import {
   DetailsRow
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-import { CSVLink } from 'react-csv'
 
-import { TopsqlSummaryItem, TopsqlSummaryByItem } from '@lib/client'
+import { TopsqlSummaryItem } from '@lib/client'
 import {
   Card,
   CardTable,
   Bar,
   TextWrap,
   HighlightSQL,
-  AppearAnimate,
-  TimeRange,
-  toTimeRangeValue
+  AppearAnimate
 } from '@lib/components'
 
 import { useRecordSelection } from '../../utils/useRecordSelection'
 import { ListDetail } from './ListDetail'
-import {
-  isOthersRecord,
-  isSummaryByRecord,
-  isUnknownSQLRecord
-} from '../../utils/specialRecord'
+import { isOthersRecord, isUnknownSQLRecord } from '../../utils/specialRecord'
 import { InstanceType } from './ListDetail/ListDetailTable'
 import { useMemoizedFn } from 'ahooks'
 import { telemetry } from '../../utils/telemetry'
-import openLink from '@lib/utils/openLink'
-import { useNavigate } from 'react-router-dom'
-import { TopSQLContext } from '../../context'
-import { AggLevel } from './List'
 
 interface ListTableProps {
-  data: any[]
-  groupBy: string
+  data: TopsqlSummaryItem[]
   topN: number
   instanceType: InstanceType
-  timeRange: TimeRange
   onRowOver: (key: string) => void
   onRowLeave: () => void
 }
 
 const emptyFn = () => {}
 
-export type SQLRecord = TopsqlSummaryItem &
-  TopsqlSummaryByItem & {
-    cpuTime: number
-  }
-
-function isConvertNumber(value: string): boolean {
-  let res = !isNaN(Number(value))
-  return res
+export type SQLRecord = TopsqlSummaryItem & {
+  cpuTime: number
 }
 
 export function ListTable({
   data,
-  groupBy,
   topN,
   instanceType,
-  timeRange,
   onRowLeave,
   onRowOver
 }: ListTableProps) {
   const { t } = useTranslation()
   const { data: tableRecords, capacity } = useTableData(data)
-  const navigate = useNavigate()
-  const ctx = useContext(TopSQLContext)
-
-  const tableColumns = useMemo(() => {
-    function goDetail(ev: React.MouseEvent<HTMLElement>, record: SQLRecord) {
-      const sv = sessionStorage.getItem('statement.query_options')
-      if (sv) {
-        const queryOptions = JSON.parse(sv)
-        queryOptions.searchText = record.sql_digest
-        sessionStorage.setItem(
-          'statement.query_options',
-          JSON.stringify(queryOptions)
-        )
-      }
-
-      const tv = toTimeRangeValue(timeRange)
-      openLink(`/statement?from=${tv[0]}&to=${tv[1]}`, ev, navigate)
-    }
-    let cols = [
+  const tableColumns = useMemo(
+    () => [
       {
         name: t('topsql.table.fields.cpu_time'),
         key: 'cpuTime',
@@ -100,32 +62,14 @@ export function ListTable({
         )
       },
       {
-        name:
-          groupBy === AggLevel.Table
-            ? t('topsql.table.fields.table')
-            : groupBy === AggLevel.Schema
-            ? t('topsql.table.fields.db')
-            : t('topsql.table.fields.sql'),
-        key:
-          groupBy === AggLevel.Table || groupBy === AggLevel.Schema
-            ? 'text'
-            : 'sql_text',
+        name: t('topsql.table.fields.sql'),
+        key: 'query',
         minWidth: 250,
         maxWidth: 550,
         onRender: (rec: SQLRecord) => {
-          let text = rec.text
-            ? rec.text
-            : isUnknownSQLRecord(rec)
+          const text = isUnknownSQLRecord(rec)
             ? `(SQL ${rec.sql_digest?.slice(0, 8)})`
             : rec.sql_text!
-
-          // parser the table name if the text is like "tableId-tableName"
-          text =
-            text.includes('-') && text.split('-').length > 1
-              ? isConvertNumber(text.split('-')[0])
-                ? text.split('-')[1] + ' ( tid =' + text.split('-')[0] + ' )'
-                : text
-              : text
           return isOthersRecord(rec) ? (
             <Tooltip
               title={t('topsql.table.others_tooltip', { topN })}
@@ -153,55 +97,24 @@ export function ListTable({
             </Tooltip>
           )
         }
-      },
-      {
-        name: '',
-        key: 'actions',
-        minWidth: 200,
-        // maxWidth: 200,
-        onRender: (rec) => {
-          if (!isOthersRecord(rec) && !isSummaryByRecord(rec)) {
-            return (
-              <Typography.Link onClick={(ev) => goDetail(ev, rec)}>
-                {t('topsql.table.actions.search_in_statements')}
-              </Typography.Link>
-            )
-          }
-          return null
-        }
       }
-    ]
-    if (ctx?.cfg.showSearchInStatements === false) {
-      cols = cols.filter((c) => c.key !== 'actions')
-    }
-    return cols
-  }, [
-    capacity,
-    t,
-    topN,
-    groupBy,
-    navigate,
-    timeRange,
-    ctx?.cfg.showSearchInStatements
-  ])
+    ],
+    [capacity, t, topN]
+  )
 
-  const csvHeaders = tableColumns
-    .slice(0, 2)
-    .map((c) => ({ label: c.name, key: c.key }))
-
-  const getKey = useMemoizedFn((r: SQLRecord) => r?.sql_digest ?? r?.text ?? '')
+  const getKey = useMemoizedFn((r: SQLRecord) => r.sql_digest!)
 
   const { selectedRecord, selection } = useRecordSelection<SQLRecord>({
     storageKey: 'topsql.list_table_selected_key',
     selections: tableRecords,
     options: {
-      getKey,
-      canSelectItem: (r) => !isSummaryByRecord(r)
+      getKey
     }
   })
+
   const onRenderRow = useMemoizedFn((props: any) => (
     <div
-      onMouseEnter={() => onRowOver(props.item?.sql_digest ?? props.item?.text)}
+      onMouseEnter={() => onRowOver(props.item.sql_digest)}
       onMouseLeave={onRowLeave}
       onClick={() =>
         telemetry.clickStatement(props.itemIndex, props.itemIndex === topN)
@@ -214,16 +127,9 @@ export function ListTable({
   return tableRecords.length ? (
     <>
       <Card noMarginBottom noMarginTop>
-        <div className="ant-form-item-extra">
-          {t('topsql.table.description', { topN })}{' '}
-          <CSVLink
-            data={tableRecords || []}
-            headers={csvHeaders}
-            filename="topsql"
-          >
-            Download to CSV
-          </CSVLink>
-        </div>
+        <p className="ant-form-item-extra">
+          {t('topsql.table.description', { topN })}
+        </p>
       </Card>
       <CardTable
         listProps={
@@ -243,21 +149,19 @@ export function ListTable({
         onRenderRow={onRenderRow}
       />
       <AppearAnimate motionName="contentAnimation">
-        {selectedRecord &&
-          groupBy !== AggLevel.Table &&
-          groupBy !== AggLevel.Schema && (
-            <ListDetail
-              instanceType={instanceType}
-              record={selectedRecord}
-              capacity={capacity}
-            />
-          )}
+        {selectedRecord && (
+          <ListDetail
+            instanceType={instanceType}
+            record={selectedRecord}
+            capacity={capacity}
+          />
+        )}
       </AppearAnimate>
     </>
   ) : null
 }
 
-function useTableData(records: any[]) {
+function useTableData(records: TopsqlSummaryItem[]) {
   const tableData: { data: SQLRecord[]; capacity: number } = useMemo(() => {
     if (!records) {
       return { data: [], capacity: 0 }
@@ -271,10 +175,6 @@ function useTableData(records: any[]) {
             cpuTime += plan.cpu_time_ms![i]
           })
         })
-
-        if (r.cpu_time_ms_sum && (r.text?.length ?? 0) > 0) {
-          cpuTime = r.cpu_time_ms_sum
-        }
 
         if (capacity < cpuTime) {
           capacity = cpuTime
@@ -291,5 +191,6 @@ function useTableData(records: any[]) {
       .sort((a, b) => (b.is_other ? -1 : 0))
     return { data: d, capacity }
   }, [records])
+
   return tableData
 }

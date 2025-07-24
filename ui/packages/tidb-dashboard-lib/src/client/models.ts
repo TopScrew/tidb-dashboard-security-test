@@ -1749,12 +1749,6 @@ export interface ModelRequestTargetStatistics {
      * @type {number}
      * @memberof ModelRequestTargetStatistics
      */
-    'num_scheduling_nodes'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelRequestTargetStatistics
-     */
     'num_ticdc_nodes'?: number;
     /**
      * 
@@ -1780,12 +1774,6 @@ export interface ModelRequestTargetStatistics {
      * @memberof ModelRequestTargetStatistics
      */
     'num_tiproxy_nodes'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelRequestTargetStatistics
-     */
-    'num_tso_nodes'?: number;
 }
 
 
@@ -3511,59 +3499,6 @@ export interface TopologyPDInfo {
 /**
  * 
  * @export
- * @interface TopologySchedulingInfo
- */
-export interface TopologySchedulingInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologySchedulingInfo
-     */
-    'deploy_path'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologySchedulingInfo
-     */
-    'git_hash'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologySchedulingInfo
-     */
-    'ip'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologySchedulingInfo
-     */
-    'port'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologySchedulingInfo
-     */
-    'start_timestamp'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologySchedulingInfo
-     */
-    'status'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologySchedulingInfo
-     */
-    'version'?: string;
-}
-
-
-
-
-/**
- * 
- * @export
  * @interface TopologyStoreInfo
  */
 export interface TopologyStoreInfo {
@@ -3858,59 +3793,6 @@ export interface TopologyTiProxyInfo {
 /**
  * 
  * @export
- * @interface TopologyTSOInfo
- */
-export interface TopologyTSOInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologyTSOInfo
-     */
-    'deploy_path'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologyTSOInfo
-     */
-    'git_hash'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologyTSOInfo
-     */
-    'ip'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologyTSOInfo
-     */
-    'port'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologyTSOInfo
-     */
-    'start_timestamp'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopologyTSOInfo
-     */
-    'status'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopologyTSOInfo
-     */
-    'version'?: string;
-}
-
-
-
-
-/**
- * 
- * @export
  * @interface TopsqlEditableConfig
  */
 export interface TopsqlEditableConfig {
@@ -3960,41 +3842,6 @@ export interface TopsqlInstanceResponse {
      * @memberof TopsqlInstanceResponse
      */
     'data'?: Array<TopsqlInstanceItem>;
-}
-
-
-
-
-/**
- * 
- * @export
- * @interface TopsqlSummaryByItem
- */
-export interface TopsqlSummaryByItem {
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof TopsqlSummaryByItem
-     */
-    'cpu_time_ms'?: Array<number>;
-    /**
-     * 
-     * @type {number}
-     * @memberof TopsqlSummaryByItem
-     */
-    'cpu_time_ms_sum'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TopsqlSummaryByItem
-     */
-    'text'?: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof TopsqlSummaryByItem
-     */
-    'timestamp_sec'?: Array<number>;
 }
 
 
@@ -4136,12 +3983,6 @@ export interface TopsqlSummaryResponse {
      * @memberof TopsqlSummaryResponse
      */
     'data'?: Array<TopsqlSummaryItem>;
-    /**
-     * 
-     * @type {Array<TopsqlSummaryByItem>}
-     * @memberof TopsqlSummaryResponse
-     */
-    'data_by'?: Array<TopsqlSummaryByItem>;
 }
 
 

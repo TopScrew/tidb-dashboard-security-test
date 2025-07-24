@@ -11,7 +11,7 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/joomcode/errorx"
 	"github.com/pingcap/log"
-	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/clientv3"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -77,7 +77,6 @@ func (m *DynamicConfigManager) Start(ctx context.Context) error {
 			dc = &DynamicConfig{}
 		}
 		dc.Adjust()
-		dc.KeyVisual.AutoCollectionDisabled = !m.config.EnableKeyVisualizer
 
 		if err := backoff.Retry(func() error { return m.Set(dc) }, bo); err != nil {
 			log.Error("Failed to start DynamicConfigManager", zap.Error(err))

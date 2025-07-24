@@ -26,7 +26,6 @@ export interface IKeyVizToolbarProps {
   brightLevel: number
   dateRange: number
   showHelp: boolean
-  showSetting: boolean
   onResetZoom: () => void
   onToggleBrush: () => void
   onChangeMetric: (string) => void
@@ -98,8 +97,7 @@ class KeyVizToolbar extends Component<IKeyVizToolbarProps & WithTranslation> {
       isOnBrush,
       metricType,
       autoRefreshSeconds,
-      showHelp,
-      showSetting
+      showHelp
     } = this.props
 
     // in hours
@@ -216,15 +214,13 @@ class KeyVizToolbar extends Component<IKeyVizToolbarProps & WithTranslation> {
           </Space>
 
           <Space>
-            {showSetting && (
-              <Tooltip
-                mouseEnterDelay={0}
-                mouseLeaveDelay={0}
-                title={t('keyviz.settings.title')}
-              >
-                <SettingOutlined onClick={this.handleShowSetting} />
-              </Tooltip>
-            )}
+            <Tooltip
+              mouseEnterDelay={0}
+              mouseLeaveDelay={0}
+              title={t('keyviz.settings.title')}
+            >
+              <SettingOutlined onClick={this.handleShowSetting} />
+            </Tooltip>
             {!isDistro() && showHelp && (
               <Tooltip
                 mouseEnterDelay={0}

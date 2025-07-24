@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { SlowQueryApp, SlowQueryProvider } from '@pingcap/tidb-dashboard-lib'
 import { ctx, DsExtra } from './context'
 
@@ -26,9 +26,41 @@ function getDsExtra(): DsExtra {
 }
 
 export default function () {
-  return (
-    <SlowQueryProvider value={ctx(getDsExtra())}>
-      <SlowQueryApp />
-    </SlowQueryProvider>
-  )
+  const dsExtra = useMemo(() => getDsExtra(), [])
+  const [ready, setReady] = useState(false)
+
+  // TODO: remove hack
+  useEffect(() => {
+    sessionStorage.setItem(
+      'slow_query.query_options',
+      JSON.stringify({
+        visibleColumnKeys: {
+          query: true,
+          timestamp: true,
+          query_time: true,
+          memory_max: true
+        },
+        timeRange: {
+          type: 'absolute',
+          value: [dsExtra.beginTime, dsExtra.endTime]
+        },
+        schemas: [],
+        searchText: '',
+        limit: 100,
+
+        digest: '',
+        plans: []
+      })
+    )
+    setReady(true)
+  }, [dsExtra.beginTime, dsExtra.endTime])
+
+  if (ready) {
+    return (
+      <SlowQueryProvider value={ctx(dsExtra)}>
+        <SlowQueryApp />
+      </SlowQueryProvider>
+    )
+  }
+  return <div>loading...</div>
 }

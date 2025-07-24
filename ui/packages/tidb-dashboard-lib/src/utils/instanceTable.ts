@@ -7,9 +7,7 @@ import {
   TopologyTiDBInfo,
   TopologyStoreInfo,
   TopologyTiCDCInfo,
-  TopologyTiProxyInfo,
-  TopologyTSOInfo,
-  TopologySchedulingInfo
+  TopologyTiProxyInfo
 } from '@lib/client'
 
 export const InstanceKinds = [
@@ -18,9 +16,7 @@ export const InstanceKinds = [
   'tikv',
   'tiflash',
   'ticdc',
-  'tiproxy',
-  'tso',
-  'scheduling'
+  'tiproxy'
 ] as const
 export type InstanceKind = typeof InstanceKinds[number]
 
@@ -41,9 +37,7 @@ export interface IInstanceTableItem
     TopologyTiDBInfo,
     TopologyStoreInfo,
     TopologyTiCDCInfo,
-    TopologyTiProxyInfo,
-    TopologyTSOInfo,
-    TopologySchedulingInfo {
+    TopologyTiProxyInfo {
   key: string
   instanceKind: InstanceKind
 }
@@ -55,8 +49,6 @@ export interface IBuildInstanceTableProps {
   dataTiFlash?: TopologyStoreInfo[]
   dataTiCDC?: TopologyTiCDCInfo[]
   dataTiProxy?: TopologyTiProxyInfo[]
-  dataTSO?: TopologyTSOInfo[]
-  dataScheduling?: TopologySchedulingInfo[]
   includeTiFlash?: boolean
 }
 
@@ -67,8 +59,6 @@ export function buildInstanceTable({
   dataTiFlash,
   dataTiCDC,
   dataTiProxy,
-  dataTSO,
-  dataScheduling,
   includeTiFlash
 }: IBuildInstanceTableProps): [IInstanceTableItem[], IGroup[]] {
   const tableData: IInstanceTableItem[] = []
@@ -82,8 +72,6 @@ export function buildInstanceTable({
       | TopologyStoreInfo[]
       | TopologyTiCDCInfo[]
       | TopologyTiProxyInfo[]
-      | TopologyTSOInfo[]
-      | TopologySchedulingInfo[]
       | undefined
   } = {}
   kinds.pd = dataPD
@@ -91,8 +79,6 @@ export function buildInstanceTable({
   kinds.tikv = dataTiKV
   kinds.ticdc = dataTiCDC
   kinds.tiproxy = dataTiProxy
-  kinds.tso = dataTSO
-  kinds.scheduling = dataScheduling
   if (includeTiFlash) {
     kinds.tiflash = dataTiFlash
   }

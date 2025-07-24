@@ -94,7 +94,7 @@ func (s *Service) getDetails(c *gin.Context) {
 	}
 
 	db := utils.GetTiDBConnection(c)
-	result, err := QuerySlowLogDetail(&req, s.params.SysSchema, db.Table(SlowQueryTable))
+	result, err := QuerySlowLogDetail(&req, db.Table(SlowQueryTable))
 	if err != nil {
 		rest.Error(c, err)
 		return
@@ -109,13 +109,15 @@ func (s *Service) getDetails(c *gin.Context) {
 	// See: https://github.com/pingcap/tidb-dashboard/issues/1515
 	if result.BinaryPlan != "" {
 		// may failed but it's ok
-		result.BinaryPlanText, _ = utils.GenerateBinaryPlanText(db, result.BinaryPlan)
+		result.BinaryPlanText, err = utils.GenerateBinaryPlanText(db, result.BinaryPlan)
 		// may failed but it's ok
 		result.BinaryPlanJSON, _ = utils.GenerateBinaryPlanJSON(result.BinaryPlan)
 
-		// reduce response size
-		result.BinaryPlan = ""
-		result.Plan = ""
+		if err == nil {
+			// reduce response size
+			result.BinaryPlan = ""
+			result.Plan = ""
+		}
 	}
 
 	c.JSON(http.StatusOK, *result)

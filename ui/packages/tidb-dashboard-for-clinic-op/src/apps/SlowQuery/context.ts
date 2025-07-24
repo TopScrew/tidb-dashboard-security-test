@@ -19,7 +19,7 @@ export type DsExtra = {
 class DataSource implements ISlowQueryDataSource {
   constructor(public extra: DsExtra) {}
 
-  getDatabaseList(beginTime: number, endTime: number, options?: ReqConfig) {
+  infoListDatabases(options?: ReqConfig) {
     // return Promise.reject(new Error('no need to implemented'))
     return Promise.resolve({
       data: [],

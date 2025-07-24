@@ -8,31 +8,11 @@ import {
 
 import client, { SlowqueryModel } from '~/client'
 
-const debugHeaders = {
-  // 'x-cluster-id': '1379661944646413143',
-  // 'x-org-id': '1372813089209061633',
-  // 'x-project-id': '1372813089454525346',
-  // 'x-provider': 'aws',
-  // 'x-region': 'us-east-1',
-  // 'x-env': 'prod'
-}
-
 class DataSource implements ISlowQueryDataSource {
   constructor(public cache: SlowqueryModel[]) {}
 
-  getDatabaseList(beginTime: number, endTime: number, options?: ReqConfig) {
-    // get database list from PD
-    if (beginTime === 0) {
-      return client.getInstance().infoListDatabases(options)
-    }
-
-    // get database list from s3
-    return client
-      .getAxiosInstance()
-      .get(
-        `/slow_query/databases?begin_time=${beginTime}&end_time=${endTime}`,
-        { headers: debugHeaders }
-      )
+  infoListDatabases(options?: ReqConfig) {
+    return client.getInstance().infoListDatabases(options)
   }
 
   infoListResourceGroupNames(options?: ReqConfig) {
@@ -113,17 +93,6 @@ class DataSource implements ISlowQueryDataSource {
       .get(`/slow_query/analyze?begin_time=${start}&end_time=${end}`)
   }
 
-  slowQueryDownloadDBFile(begin_time: number, end_time: number) {
-    return client
-      .getAxiosInstance()
-      .get(`/slow_query/files?begin_time=${begin_time}&end_time=${end_time}`, {
-        responseType: 'blob',
-        headers: {
-          Accept: 'application/octet-stream'
-        }
-      })
-  }
-
   promqlQuery(query: string, time: number, timeout: string) {
     return client
       .getAxiosInstance()
@@ -170,7 +139,6 @@ export const ctx: (cfg: Partial<ISlowQueryConfig>) => ISlowQueryContext = (
       showDBFilter: true,
       showDigestFilter: false,
       showResourceGroupFilter: true,
-      showDownloadSlowQueryDBFile: true,
       ...cfg
     }
   }

@@ -80,13 +80,11 @@ type GetSummaryRequest struct {
 	Start        string `json:"start"`
 	End          string `json:"end"`
 	Top          string `json:"top"`
-	GroupBy      string `json:"group_by"`
 	Window       string `json:"window"`
 }
 
 type SummaryResponse struct {
-	Data   []SummaryItem   `json:"data"`
-	DataBy []SummaryByItem `json:"data_by"`
+	Data []SummaryItem `json:"data"`
 }
 
 type SummaryItem struct {
@@ -99,13 +97,6 @@ type SummaryItem struct {
 	ScanRecordsPerSec float64           `json:"scan_records_per_sec"`
 	ScanIndexesPerSec float64           `json:"scan_indexes_per_sec"`
 	Plans             []SummaryPlanItem `json:"plans"`
-}
-
-type SummaryByItem struct {
-	Text         string   `json:"text"`
-	TimestampSec []uint64 `json:"timestamp_sec"`
-	CPUTimeMs    []uint64 `json:"cpu_time_ms,omitempty"`
-	CPUTimeMsSum uint64   `json:"cpu_time_ms_sum"`
 }
 
 type SummaryPlanItem struct {
