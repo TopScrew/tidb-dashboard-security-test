@@ -36,7 +36,7 @@ WORKDIR /go/src/github.com/pingcap/tidb-dashboard
 COPY .. .
 RUN make package
 
-FROM alpine:3.16
+FROM alpine:3.21.3
 
 COPY --from=builder /go/src/github.com/pingcap/tidb-dashboard/bin/tidb-dashboard /tidb-dashboard
 
